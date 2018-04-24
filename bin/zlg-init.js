@@ -9,6 +9,10 @@ const localPath = require("../lib/localpath")
 const isLocalPath = localPath.isLocalPath
 const checkVersion = require("../lib/check-version")
 const ora = require("ora")
+const rm = require("rimraf").sync
+const download = require("download-git-repo")
+const logger = require("../lib/logger")
+const generate = require("../lib/generate")
 const log = console.log
 program
   .usage("<template-name>[project-name]")
