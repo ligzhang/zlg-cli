@@ -3,7 +3,7 @@ const chalk = require("chalk")
 const path = require("path")
 const home = require("user-home")
 const tildify = require("tildify")
-const inquire = require("inquire")
+const inquire = require("inquirer")
 const exists = require("fs").existsSync
 const localPath = require("../lib/localpath")
 const isLocalPath = localPath.isLocalPath
@@ -77,7 +77,7 @@ process.on("exit", () => {
 
 if (inPlace || exists(to)) {
   inquire
-    .promp([
+    .prompt([
       {
         type: "confirm",
         message: inPlace
@@ -98,7 +98,9 @@ if (inPlace || exists(to)) {
 
 function run() {
   // check if template is local
+  console.log("1")
   if (isLocalPath(template)) {
+    console.log(2)
     const templatePath = getTemplate(template)
     if (exists(templatePath)) {
       generate(name, templatePath, to, err => {
@@ -115,7 +117,9 @@ function run() {
     checkVersion(() => {
       if (!hasSlash) {
         // use official template
+
         const officialTemplate = "vuejs-templates/" + template
+
         if (template.includes("#")) {
           downloadAndGenerate(officialTemplate)
         } else {
@@ -123,6 +127,8 @@ function run() {
             warnings.v2SuffixTemplatesDeprecated(template, inPlace ? "" : name)
             return
           }
+          console.log(3, officialTemplate)
+
           downloadAndGenerate(officialTemplate)
         }
       } else {
@@ -138,13 +144,15 @@ function downloadAndGenerate(template) {
   if (exists(tmp)) {
     rm(tmp)
   }
-
   download(template, tmp, { clone }, err => {
     spinner.stop()
     if (err) {
       logger.fatal(`Failed to download repo ${template}:${err.message.trim()}`)
     }
+
     generate(name, tmp, to, err => {
+      log(4)
+
       if (err) {
         logger.fatal(err)
       }
